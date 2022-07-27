@@ -1,42 +1,54 @@
-def quick_sort(list):
+def merge_sort(list):
 
+    # 1. Store the length of the list
     list_length = len(list)
 
-    # Base case: directly return list if there are fewer than 2 elts in list
-    if list_length < 2:
+    # 2. Base case: if list is already sorted
+    if list_length <= 1:
         return list
 
-    # Let the pivot be the first element in the array
-    pivot_pos = 0
+    # 3. Identify the list midpoint to partition into left and right
+    mid_point = list_length // 2
 
-    # Initialize tracker
-    tracker = 0
+    # 4. Break the list into left and right, and merge sort each
+    left_partition = merge_sort(list[:mid_point])
+    right_partition = merge_sort(list[mid_point:])
 
-    # Create two buckets
-    for i in range(1, list_length):
-        if list[pivot_pos] >= list[i]:
-            # Increment position tracker
-            # Swap
-            tracker += 1
-            temp = list[tracker]
-            list[tracker] = list[i]
-            list[i] = temp
+    # 5. Merge!!! (left and right list)
+    return merge(left_partition, right_partition)
 
-    # Swap pivot and tracker
-    temp2 = list[pivot_pos]
-    list[pivot_pos] = list[tracker]
-    list[tracker] = temp2
+def merge(left_partition, right_partition):
 
-    # Omit tracker
-    left = quick_sort(list[0:tracker])
-    right = quick_sort(list[tracker+1:list_length])
+    # Initialize an output array
+    output = []
 
-    return left + [list[tracker]] + right
+    # Initialize array points
+    i = j = 0
 
-def run_quick_sort():
-    unsorted_list = [4, 6, 7, 0, 1]
+    # initialize length
+    left_length = len(left_partition)
+    right_length = len(right_partition)
+
+    # Append the smaller elements in both arrays into output (in ascending order)
+    while i < left_length and j < right_length:
+        if left_partition[i] <= right_partition[j]:
+            output.append(left_partition[i])
+            i += 1
+        else:
+            output.append(right_partition[j])
+            j += 1
+
+    # Append the remaining elements of left and right
+    output.extend(left_partition[i:])
+    output.extend(right_partition[j:])
+
+    return output
+
+def run_merge_sort():
+    unsorted_list = [4, 7, 9, 0, 0, 1, -1, 20, 100]
     print(unsorted_list)
-    sorted_list = quick_sort(unsorted_list)
+    sorted_list = merge_sort(unsorted_list)
     print(sorted_list)
 
-run_quick_sort()
+
+print(merge([1, 3, 4, 5],[2, 6, 7, 8]))
